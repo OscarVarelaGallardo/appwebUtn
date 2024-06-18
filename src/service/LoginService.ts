@@ -1,5 +1,5 @@
 import { DraftUserSchema } from "../types"
-import {  safeParse } from "valibot"
+import { safeParse } from "valibot"
 
 import axios from "axios"
 type UserData = {
@@ -13,16 +13,16 @@ export async function loginService(data: UserData): Promise<boolean> {
             email: data.email,
             password: data.password
         })
-        if(result.success){
+        if (result.success) {
             const url = `${import.meta.env.VITE_API_URL}/user/login `
-             await axios.post(url, {
+            await axios.post(url, {
                 correo_electronico: data.email,
                 contrasena: data.password
             })
             return true
-        }else{
+        } else {
             throw new Error('Datos invalidos')
-            
+
         }
     } catch (error) {
         console.log(error)
