@@ -1,5 +1,5 @@
 import { DraftUserSchema } from "../types"
-import { email, safeParse } from "valibot"
+import {  safeParse } from "valibot"
 
 import axios from "axios"
 type UserData = {
