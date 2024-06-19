@@ -14,14 +14,15 @@ export async function action({ request }: ActionFunctionArgs) {
   if (!response) {
     return 'Credenciales invalidas';
   }
-  
+    //guardarlo en el local storage
+    localStorage.setItem('response', JSON.stringify(response));
   return redirect('/controlPanel');
 
 }
 
 const Login = () => {
   const error = useActionData() as string;
-
+  console.log(error);
 
 
   return (

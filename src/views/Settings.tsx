@@ -1,12 +1,79 @@
+import { useEffect, useState } from "react"
+import { getUserData } from "../service/UserService";
+import StudentList from "../components/StudentList";
+interface User {
+  correo_electronico: string;
+}
+interface Users {
+  nombre: string;
+  apellido: string;
+  matricula: string;
+  correo_electronico: string;
+  imagen: string;
+  token: string;
+  id_rol: {
+    id: number;
+    nombre_rol: string;
+  };
+  estatus: string;
+}
 
 const Settings = () => {
- 
+  const [isLogged, setIsLogged] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [users, setUsers] = useState<Users[]>([]);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userString = localStorage.getItem('response'); // Removed await since localStorage.getItem is not asynchronous
+      if (userString) {
+        const userObject = JSON.parse(userString);
+
+        if (userObject.user) {
+          setUser(userObject.user);
+          setIsLogged(true);
+        }
+      }
+    };
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const user = localStorage.getItem('response')
+    const userObject = JSON.parse(user as string)
+
+    if (user && userObject.user) {
+      setUser(userObject.user)
+    }
+
+  }, [])
+
+  useEffect(() => {
+    //hacer un fetch a la api para obtener los datos del usuario
+    const fetchUser = async () => {
+      const listofUsers = await getUserData()
+      if (listofUsers) {
+        const { users } = listofUsers
+        setUsers(users);
+      }
+    }
+    fetchUser()
+  }
+    , [])
 
 
   return (
     <div className="
     sm:pl-5 sm:pr-5 md:pl-10 md:pr-10 lg:pl-20 lg:pr-20 xl:pl-32 xl:pr-32 2xl:
-    bg-gray-50 dark:bg-gray-900">
+    bg-gray-50 dark:bg-gray-900 pt-2">
+      {isLogged &&
+        <button type="button" className="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+          onClick={() => {
+            localStorage.removeItem('response')
+            window.location.href = '/'
+            setIsLogged(false)
+          }}
+        >Cerrar sesión</button>
+      }
       <section className="bg-gray-50 dark:bg-emerald-600  md:place-items-center w-full py-2 ">
 
         <div className="flex flex-col  mx-auto lg:py-0">
@@ -29,7 +96,14 @@ const Settings = () => {
                     text-md font-normal leading-tight tracking-tight
                   dark:text-gray-300 uppercase">
                   Credenciales de acceso
+
                 </p>
+                {user &&
+                  <div className="flex items-center">
+                    <p className="text-gray-600  text-sm">Cuenta: {user.correo_electronico}</p>
+                  </div>
+                }
+
               </div>
 
               <img className="w-16 h-18 rounded-full" src="https://utn.edomex.gob.mx/sites/utn.edomex.gob.mx/files/images/acerca_de_la_utn/logo_300px_400px.png" alt="Profile picture" />
@@ -38,7 +112,7 @@ const Settings = () => {
 
           </div>
 
-         
+
 
         </div>
       </section>
@@ -93,6 +167,12 @@ const Settings = () => {
                 Nombre
               </th>
               <th scope="col" className="px-6 py-3">
+                Apellido
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Matricula
+              </th>
+              <th scope="col" className="px-6 py-3">
                 Imagen
               </th>
 
@@ -114,47 +194,19 @@ const Settings = () => {
             </tr>
           </thead>
           <tbody>
-            <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-              <td className="w-4 p-4">
-                <div className="flex items-center">
-                  <input id="checkbox-table-search-1" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600" />
-                  <label htmlFor="checkbox-table-search-1" className="sr-only">checkbox</label>
-                </div>
-              </td>
-              <th scope="row" className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white">
-
-                <div className="ps-3">
-                  <div className="text-base font-semibold">Oscar Varela Gallardo</div>
-                  <div className="font-normal text-gray-500">
-
-                    232271001@alumnos.utn.edu.mx
-                  </div>
-                </div>
-              </th>
-              <td className="px-6 py-4">
-                <img className="w-10 h-10 rounded-full" src="https://img.freepik.com/foto-gratis/chico-guapo-seguro-posando-contra-pared-blanca_176420-32936.jpg?size=626&ext=jpg&ga=GA1.1.1788614524.1718236800&semt=sph" alt="Jese image" />
-              </td>
-              <td className="px-6 py-4">
-                <span className="text-sm font-medium text-green-500 dark:text-green-400">Estudiante</span>
-              </td>
-
-              <td className="px-6 py-4">
-                <div className="flex items-center">
-                  <div className="h-2.5 w-2.5 rounded-full bg-green-500 me-2"></div> Online
-                </div>
-              </td>
-              <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400 center">
-                <i className="fa-solid fa-message">
-
-                </i>
-
-
-              </td>
-              <td className="px-6 py-4">
-                <a href="#" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">Editar</a>
-              </td>
-            </tr>
-
+            {users.map((user) => (
+              <StudentList
+                key={user.correo_electronico}
+                nombre={user.nombre}
+                apellido={user.apellido}
+                matricula={user.matricula}
+                correo_electronico={user.correo_electronico}
+                imagen={user.imagen}
+                id_rol={user.id_rol}
+                estatus={user.estatus}
+                token={user.token}
+              />
+            ))}
           </tbody>
         </table>
       </div>

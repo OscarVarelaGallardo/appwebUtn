@@ -15,11 +15,11 @@ export async function loginService(data: UserData): Promise<boolean> {
         })
         if (result.success) {
             const url = `${import.meta.env.VITE_API_URL}/user/login `
-            await axios.post(url, {
+          const response =  await axios.post(url, {
                 correo_electronico: data.email,
                 contrasena: data.password
             })
-            return true
+            return response.data
         } else {
             throw new Error('Datos invalidos')
 
@@ -29,3 +29,4 @@ export async function loginService(data: UserData): Promise<boolean> {
         return false
     }
 }
+
