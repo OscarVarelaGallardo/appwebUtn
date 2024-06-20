@@ -9,7 +9,9 @@ interface Users {
   apellido: string;
   matricula: string;
   correo_electronico: string;
-  imagen: string;
+  credencial: {
+    archivo_digital: string;
+  }
   token: string;
   id_rol: {
     id: number;
@@ -52,8 +54,10 @@ const Settings = () => {
     const fetchUser = async () => {
       const listofUsers = await getUserData()
       if (listofUsers) {
-        const { users } = listofUsers
-        setUsers(users);
+        console.log(listofUsers)
+        const { newArreglo } = listofUsers
+   
+        setUsers(newArreglo);
       }
     }
     fetchUser()
@@ -201,7 +205,7 @@ const Settings = () => {
                 apellido={user.apellido}
                 matricula={user.matricula}
                 correo_electronico={user.correo_electronico}
-                imagen={user.imagen}
+                credencial={user.credencial}
                 id_rol={user.id_rol}
                 estatus={user.estatus}
                 token={user.token}
