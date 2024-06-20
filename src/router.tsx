@@ -3,7 +3,6 @@ import Layout from './layout/Layout'
 import Login from './views/Login'
 import Settings from './views/Settings'
 import ForgotPassword from './views/ForgotPassword'
-import { action as loginAction } from './views/Login'
 export const router = createBrowserRouter([
     {
         path: '/',
@@ -13,7 +12,6 @@ export const router = createBrowserRouter([
                 index:true,
                 path:'/',
                 element:<Login/>,
-                action:loginAction 
             },
             {
                 path:'controlPanel',
