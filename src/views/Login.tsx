@@ -1,4 +1,4 @@
-import { Link, Form , redirect,useNavigate } from "react-router-dom";
+import { Link, Form ,useNavigate } from "react-router-dom";
 import ErrorMessage from '../components/ErrorMessage';
 import Spinner from "../components/Spinner";
 import { useState } from "react";
@@ -39,7 +39,7 @@ const Login = () => {
     } 
     
 
-    if (response.status === 200){
+    if (typeof response === 'object' && response !== null) {
       setLoading(false);
       localStorage.setItem('response', JSON.stringify(response));
       navigate('/controlPanel');

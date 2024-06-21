@@ -7,7 +7,7 @@ const Layout = () => {
 
   return (
     <>
-      <div className="bg-emerald-600 dark:bg-gray-900 pt-10 ">
+      <div className="bg-emerald-600 dark:bg-emerald-600 pt-10 ">
       <div className="flex flex-col items-end justify-end w-full p-4">
         <div className="flex flex-col items-end justify-end w-full p-4">
         
